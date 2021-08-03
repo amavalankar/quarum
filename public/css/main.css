@@ -1,0 +1,12 @@
+* {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.brand-color-text {
+    color: #382eec !important;
+}
+
+.brand-color-fill {
+    color: #fff !important;
+    background-color: #382eec !important;
+}

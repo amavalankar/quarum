@@ -6,20 +6,110 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Grocery List</title>
+    <title>Quarum</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
   </head>
 
   <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/index.html">
+                <h4>Quarum</h4>
+            </a>
 
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu is-active">
+            <div class="navbar-start">
+            <a class="navbar-item">
+                Home
+            </a>
+
+            <a class="navbar-item">
+                Documentation
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                More
+                </a>
+
+                <div class="navbar-dropdown">
+                <a class="navbar-item">
+                    About
+                </a>
+                <a class="navbar-item">
+                    Jobs
+                </a>
+                <a class="navbar-item">
+                    Contact
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                    Report an issue
+                </a>
+                </div>
+            </div>
+            </div>
+
+            <div class="navbar-end">
+            <div class="navbar-item">
+                <a class="button is-primary">
+                    <strong>Sign In</strong>
+                </a>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="editNoteModal" class="modal is-active">
+        <div class="modal-background"></div>
+
+        <div class="modal-content">
+            <div class="modal-card is-rounded">
+                <section class="modal-card-body">
+                    <div class="content is-medium p-3">
+                        <h1 class="has-text-centered brand-color-text">Sign In</h1>
+                        <h5 class="has-text-centered">Please sign in to continue to Quarum.</h5>
+
+                        <hr>
+
+                        <button class="button brand-color-fill is-rounded is-medium is-fullwidth mb-4" onclick="signIn()">Sign in with Google</button>
+
+                        <article class="message is-light">
+                            <div class="message-body">
+                                <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
   </body>
+  
+  <script src="js/signIn.js"></script>
 
 </html>
