@@ -1,39 +1,70 @@
 // Add answer to database
 // Add answerkey to database
 // Display answer
+// window.location.get(id)
+
 
 
 // Access and display all questions when page loads
-window.onload = event => {
-    getQuestions();
+window.onload = (event) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            getQuestions();
+            console.log(`User signed in as: ${user.displayName}`);
+            console.log(user);
+        } else {
+            window.location = 'index.html';
+        }
+    })
 }
 
 // Get questions
 const getQuestions = () => {
-    
-    dbRef = firebase.database().ref();
-    // let questionRef = firebase.database().ref('questions');
-
+    const dbRef = firebase.database().ref();
     dbRef.on('value', (snapshot) => {
-        const dbRef = snapshot.val();
-        let questions = dbRef.questions;
-
-        for (const questionId in questions) {
-            let answersData = questions[questionId].answers;
+        const dbData = snapshot.val();
+        renderQuestionAsHTML(dbData);
+        // let questions = dbRef.questions;
+        // for (const questionId in questions) {
+        //     let answersData = questions[questionId].answers;
             
-            let answerTextArray = [];
-            for (const answerId in answersData) {
-                console.log(answerId, answersData);
-                let answerText = dbRef.answers[answerId].answerText;
-                console.log(answerText);
-                answerTextArray.push(answerText);
-            }
+        //     let answerTextArray = [];
+        //     for (const answerId in answersData) {
+        //         // console.log(answerId, answersData);
+        //         let answerText = dbRef.answers[answerId].answerText;
+        //         // console.log(answerText);
+        //         answerTextArray.push(answerText);
+        //     }
 
-            renderQuestionAsHTML(questionId, questions, answerTextArray);
-        }
-    })
+        //     renderQuestionAsHTML(questionId, questions, answerTextArray);
+        // }
+    });
 };
 
+// Function to render questions and answers
+const renderQuestionAsHTML = (obj) => {
+    let questions = obj.questions;
+    let cards = ``;
+    for (const questionId in questions) {
+        let answersData = questions[questionId].answers;
+        let answerTextArray = [];
+        for (const answerId in answersData) {
+            // console.log(answerId, answersData);
+            let answerText = obj.answers[answerId].answerText;
+            // console.log(answerText);
+            answerTextArray.push(answerText);
+        }
+        cards += createCard(questionId, questions, answerTextArray);
+    }
+    let questionCards = document.querySelector("#quarum-app");
+    questionCards.innerHTML = cards;
+};
+
+// // Function to render questions and answers
+// const renderQuestionAsHTML = (questionId, questions, answerTextArray) => {
+//     let questionCards = document.querySelector("#quarum-app");
+//     questionCards.innerHTML += createCard(questionId, questions, answerTextArray);
+// };
 
 // Function to submit question
 const submitQuestion = () => {
@@ -83,19 +114,12 @@ let submitAnswer = (questionId) => {
     });
 };
 
-// Function to render questions and answers
-const renderQuestionAsHTML = (questionId, questions, answerTextArray) => {
-    let questionCards = document.querySelector("#quarum-app");
-    questionCards.innerHTML += createCard(questionId, questions, answerTextArray);
-};
-
-
 
 // Function to create card
 const createCard = (questionId, questions, answerTextArray) => {
     let answersHtml = ``;
     for (i=0; i<answerTextArray.length; i++) {
-        console.log(answerTextArray[i]);
+        // console.log(answerTextArray[i]);
         answersHtml += `
         <footer class="card-footer">
             <div class="card-footer-item">
@@ -110,26 +134,32 @@ const createCard = (questionId, questions, answerTextArray) => {
             <p class="card-header-title">
                 ${questions[questionId].questionText}
             </p>
+            <button class="button is-link is-right" onclick="upvoteQuestion('${questionId}', ${questions[questionId].questionProperties.upvotes})">
+                <span class="icon is-small">
+                    <i class="fas fa-thumbs-up"></i>
+                </span>
+                <span id="numupvotes">${questions[questionId].questionProperties.upvotes}</span>
+            </button>
+            <br>
             <div class="dropdown" id="${questionId}-dropdown">
                 <div class="dropdown-trigger">
-                    <button class="button is-up"  aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button is-up is-link" onclick="showOptions('${questionId}')" aria-haspopup="true" aria-controls="dropdown-menu">
                         <span class="icon is-small">
-                            <i class="fas fa-angle-down" aria-hidden="true" onclick="showOptions('${questionId}')"></i>
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
                     </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
-                        <a href="#" class="dropdown-item">Upvote</a>
-                        <a href="#" class="dropdown-item">Edit</a>
-                        <a href="#" class="dropdown-item">Delete</a>
+                        <a href="#" class="dropdown-item" onclick="editQuestion('${questionId}')">Edit</a>
+                        <a href="#" class="dropdown-item" onclick="deleteQuestion('${questionId}')">Delete</a>
                     </div>
                 </div>
-            </div>]
+            </div>
         </header>
         <div class="card-content">
             <div class="contern">
-                <time datetime="2016-1-1">${questions[questionId].submissionTime} <br> Upvotes: ${questions[questionId].questionProperties.upvotes}</time>
+                <time datetime="2016-1-1">${questions[questionId].submissionTime}</time>
                 <input class="input is-link" type="text" placeholder="Answer question" id="${questionId}-new-answer">
                 <button class="button" id="${questionId}-submit-answer" onclick="submitAnswer('${questionId}')">Submit</button>
             </div>
@@ -140,8 +170,50 @@ const createCard = (questionId, questions, answerTextArray) => {
     `;
 };
 
+// Toggle edit options
 let showOptions = (id) => {
     let dropdown = document.querySelector(`#${id}-dropdown`);
     console.log(dropdown);
     dropdown.classList.toggle('is-active');
 };
+
+const editQuestion = (questionId) => {
+    const editQuestionModal = document.querySelector("#editQuestionModal");
+    console.log(editQuestionModal);
+    editQuestionModal.classList.toggle("is-active");
+    // showOptions(questionId);
+
+    const saveButton = document.querySelector("#save-button");
+    saveButton.addEventListener("click", (event) => {
+        let newQuestionText = document.querySelector("#editQuestionInput").value;
+        firebase.database().ref(`questions/${questionId}`)
+            .update({
+                questionText: newQuestionText
+            });
+        document.querySelector("#editQuestionInput").value = '';
+        closeEditModal();
+    });
+
+    showOptions(questionId);
+};
+
+const upvoteQuestion = (questionId, currentUpvotes) => {
+    const newUpvotes = currentUpvotes + 1;
+
+    firebase.database().ref(`questions/${questionId}/questionProperties`)
+        .update({
+            upvotes: newUpvotes
+        });
+};
+
+const deleteQuestion = (questionId) => {
+    firebase.database().ref(`questions/${questionId}`).remove();
+    showOptions(questionId);
+};
+
+const closeEditModal = () => {
+    const editQuestionModal = document.querySelector("#editQuestionModal");
+    editQuestionModal.classList.toggle("is-active");
+}
+
+
