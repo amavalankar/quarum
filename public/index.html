@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html>
+<html class="has-navbar-fixed-top">
 
   <head>
     <meta charset="utf-8">
@@ -15,6 +15,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="https://pro.fontawesome.com/releases/v5.10.0/js/all.js" integrity="sha384-G/ZR3ntz68JZrH4pfPJyRbjW+c0+ojii5f+GYiYwldYU69A+Ejat6yIfLSxljXxD" crossorigin="anonymous"></script>
+
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
@@ -27,70 +29,92 @@
   </head>
 
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #382eec; padding: 0.5rem 0rem;">
+        <div class="navbar-brand" style="padding-left: 1rem;">
             <a class="navbar-item" href="/index.html">
-                <h4>Quarum</h4>
+                <h4 class="has-text-light"><b>Quarum</b></h4>
             </a>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            </a>
+            
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu is-active">
-            <div class="navbar-start">
-            <a class="navbar-item">
-                Home
-            </a>
+        <div class="navbar-brand navbar-end" style="padding-right: 1.5rem;">
+            <div class="navbar-item">
+                <a class="button is-small is-rounded is-light is-loading" id="accountButton">
+                    Log in
+                </a>
+            </div>
 
-            <a class="navbar-item">
-                Documentation
-            </a>
+            <div class="navbar-item dropdown is-hoverable is-right">
+                <div class="dropdown-trigger">
+                    <span class="icon">
+                            <i class="fas fa-user-circle" aria-hidden="true"></i>
+                    </span>
+                </div>
 
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                More
-                </a>
+                <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
+                    <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                        Account Settings
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a onclick="toggleSignInModal()" class="dropdown-item">
+                        <b>Sign In</b>
+                    </a>
+                    </div>
+                </div>
 
-                <div class="navbar-dropdown">
-                <a class="navbar-item">
-                    About
-                </a>
-                <a class="navbar-item">
-                    Jobs
-                </a>
-                <a class="navbar-item">
-                    Contact
-                </a>
-                <hr class="navbar-divider">
-                <a class="navbar-item">
-                    Report an issue
-                </a>
+                <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
+                    <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                        Account Settings
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a onclick="signOut()" class="dropdown-item">
+                        <b>Sign Out</b>
+                    </a>
+                    </div>
                 </div>
             </div>
-            </div>
-
-            <div class="navbar-end">
-            <div class="navbar-item">
-                <a class="button is-primary">
-                    <strong>Sign In</strong>
-                </a>
-            </div>
-            </div>
         </div>
+
+            
     </nav>
 
+    <section class="hero is-medium is-light">
+        <div class="hero-body">
+            <p class="title brand-color">
+            Quarum
+            </p>
+            <p class="subtitle">
+            A new way to ask questions and engage in lectures!
+            </p>
 
-    <div id="editNoteModal" class="modal is-active">
+            <div class="buttons">
+                <button class="button brand-color-fill" onclick="newQuarum()">
+                    New Quarum Session
+                </button>                
+                <button class="button is-outlined">Join Quarum</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="hero is-dark">
+        <div class="hero-body">
+            <p class="subtitle mb-0">
+                <b>Quarum</b>
+            </p>
+            <p class="subtitle has-text-grey-light">Created with ❤️ in San Diego, Oslo, and New York.</p>
+        </div>
+    </footer>
+
+    <div id="signInModal" class="modal">
         <div class="modal-background"></div>
 
         <div class="modal-content">
-            <div class="modal-card is-rounded">
+            <div class="modal-card">
                 <section class="modal-card-body">
-                    <div class="content is-medium p-3">
+                    <div class="content is-medium p-2">
                         <h1 class="has-text-centered brand-color-text">Sign In</h1>
                         <h5 class="has-text-centered">Please sign in to continue to Quarum.</h5>
 
@@ -110,6 +134,7 @@
     </div>
   </body>
   
+  <script src="js/buttonActions.js"></script>
   <script src="js/signIn.js"></script>
 
 </html>

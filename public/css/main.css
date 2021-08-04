@@ -1,5 +1,5 @@
 * {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif !important;
 }
 
 .brand-color-text {
@@ -9,4 +9,44 @@
 .brand-color-fill {
     color: #fff !important;
     background-color: #382eec !important;
+}
+
+.dropdown-item.is-active {
+    background-color: #382eec !important;
+}
+
+.navbar-item {
+  display: flex;
+  color: #fff;
+}
+
+.navbar-item:hover {
+  display: flex;
+  color: #cccaff !important;
+}
+
+.navbar,
+.navbar-menu,
+.navbar-start,
+.navbar-end {
+  align-items: stretch;
+  display: flex;
+  padding: 0;
+}
+
+.navbar-menu{
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+.navbar-start{
+  justify-content: flex-start;
+  margin-right: auto;
+}
+.navbar-end{
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.is-dark{
+    background-color: #232236 !important;
 }
