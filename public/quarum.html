@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Quarum</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+        <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+
+        <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
         <!-- <link rel="stylesheet" href="css/cards.css"> -->
         <!-- update the version number as needed -->
@@ -41,5 +43,23 @@
                 </div>
             </div>
         </div>
+
+        <div id="editQuestionModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Edit Question</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <input class="input is-normal" id="editQuestionInput" type="text">
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="save-button" class="button is-success">Save changes</button>
+                    <button class="button" onclick="closeEditModal()">Cancel</button>
+                </footer>
+            </div>
+        </div>
+        
     </body>
 </html>
