@@ -1,25 +1,140 @@
 
 <!DOCTYPE html>
-<html>
+<html class="has-navbar-fixed-top">
 
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Grocery List</title>
+    <title>Quarum</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="https://pro.fontawesome.com/releases/v5.10.0/js/all.js" integrity="sha384-G/ZR3ntz68JZrH4pfPJyRbjW+c0+ojii5f+GYiYwldYU69A+Ejat6yIfLSxljXxD" crossorigin="anonymous"></script>
+
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
   </head>
 
   <body>
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #382eec; padding: 0.5rem 0rem;">
+        <div class="navbar-brand" style="padding-left: 1rem;">
+            <a class="navbar-item" href="/index.html">
+                <h4 class="has-text-light"><b>Quarum</b></h4>
+            </a>
 
+            
+        </div>
+
+        <div class="navbar-brand navbar-end" style="padding-right: 1.5rem;">
+            <div class="navbar-item">
+                <a class="button is-small is-rounded is-light is-loading" id="accountButton">
+                    Log in
+                </a>
+            </div>
+
+            <div class="navbar-item dropdown is-hoverable is-right">
+                <div class="dropdown-trigger">
+                    <span class="icon">
+                            <i class="fas fa-user-circle" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
+                    <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                        Account Settings
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a onclick="toggleSignInModal()" class="dropdown-item">
+                        <b>Sign In</b>
+                    </a>
+                    </div>
+                </div>
+
+                <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
+                    <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                        Account Settings
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a onclick="signOut()" class="dropdown-item">
+                        <b>Sign Out</b>
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            
+    </nav>
+
+    <section class="hero is-medium is-light">
+        <div class="hero-body">
+            <p class="title brand-color">
+            Quarum
+            </p>
+            <p class="subtitle">
+            A new way to ask questions and engage in lectures!
+            </p>
+
+            <div class="buttons">
+                <button class="button brand-color-fill" onclick="newQuarum()">
+                    New Quarum Session
+                </button>                
+                <button class="button is-outlined">Join Quarum</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="hero is-dark">
+        <div class="hero-body">
+            <p class="subtitle mb-0">
+                <b>Quarum</b>
+            </p>
+            <p class="subtitle has-text-grey-light">Created with ❤️ in San Diego, Oslo, and New York.</p>
+        </div>
+    </footer>
+
+    <div id="signInModal" class="modal">
+        <div class="modal-background"></div>
+
+        <div class="modal-content">
+            <div class="modal-card">
+                <section class="modal-card-body">
+                    <div class="content is-medium p-2">
+                        <h1 class="has-text-centered brand-color-text">Sign In</h1>
+                        <h5 class="has-text-centered">Please sign in to continue to Quarum.</h5>
+
+                        <hr>
+
+                        <button class="button brand-color-fill is-rounded is-medium is-fullwidth mb-4" onclick="signIn()">Sign in with Google</button>
+
+                        <article class="message is-light">
+                            <div class="message-body">
+                                <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
   </body>
+  
+  <script src="js/buttonActions.js"></script>
+  <script src="js/signIn.js"></script>
 
 </html>
