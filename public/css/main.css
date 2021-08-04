@@ -50,3 +50,7 @@
 .is-dark{
     background-color: #232236 !important;
 }
+
+ .aria-hidden {
+    display: none
+}
