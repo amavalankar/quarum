@@ -4,8 +4,14 @@
 
 
 // Access and display all questions when page loads
-window.onload = function() {
-    let dbRef = firebase.database().ref();
+window.onload = event => {
+    getQuestions();
+}
+
+// Get questions
+const getQuestions = () => {
+    
+    dbRef = firebase.database().ref();
     // let questionRef = firebase.database().ref('questions');
 
     dbRef.on('value', (snapshot) => {
@@ -26,7 +32,8 @@ window.onload = function() {
             renderQuestionAsHTML(questionId, questions, answerTextArray);
         }
     })
-}
+};
+
 
 // Function to submit question
 const submitQuestion = () => {
