@@ -1,65 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html class="has-navbar-fixed-top">
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Quarum</title>
+        <title>ID — Quarum</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-        <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com"> 
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
-        <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
-        <!-- <link rel="stylesheet" href="css/cards.css"> -->
-        <!-- update the version number as needed -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script src="https://pro.fontawesome.com/releases/v5.10.0/js/all.js" integrity="sha384-G/ZR3ntz68JZrH4pfPJyRbjW+c0+ojii5f+GYiYwldYU69A+Ejat6yIfLSxljXxD" crossorigin="anonymous"></script>
+
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
         <!-- include only the Firebase features as you need -->
-        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
         <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
         <script src="js/writeQuestion.js"></script>
+        <script src="js/signIn.js"></script>
+
     </head>
+
     <body>
-        <div>
-            <h1>
-                Quarum
+
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #382eec; padding: 0.5rem 0rem;">
+            <div class="navbar-brand" style="padding-left: 1rem;">
+                <a class="navbar-item" href="/index.html">
+                    <h4 class="has-text-light"><b>Quarum</b></h4>
+                </a>
+
+                
+            </div>
+
+            <div class="navbar-brand navbar-end" style="padding-right: 1.5rem;">
+                <div class="navbar-item">
+                    <a class="button is-small is-rounded is-light is-loading" id="accountButton">
+                        Log in
+                    </a>
+                </div>
+
+                <div class="navbar-item dropdown is-right" id="accountOptions">
+                    <a onclick="toggleUserIcon()" class="has-text-white">
+                        <div class="dropdown-trigger">
+                            <span class="icon">
+                                    <i class="fas fa-user-circle" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </a>
+                    
+
+                    <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
+                        <div class="dropdown-content">
+                        <a href="#" class="dropdown-item">
+                            Account Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a onclick="toggleSignInModal()" class="dropdown-item">
+                            <b>Sign In</b>
+                        </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
+                        <div class="dropdown-content">
+                        <a href="#" class="dropdown-item">
+                            Account Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a onclick="signOut()" class="dropdown-item">
+                            <b>Sign Out</b>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </nav>
+
+        <section class="section hero is-small is-light">
+            <h1 class="title">
+                Quarum ID: <span class="brand-color-text quarum-id"></span>
             </h1>
-        </div>
-        <div class="field">
-            <input class="input is-link" type="text" placeholder="Ask an anonymous question!" id="new-question">
-            <!-- <label class="label">Ask a question!</label> -->
-            <!-- <div class="control">
-                <textarea class="textarea is-link" placeholder="Ask an anonymous question!" id="new-question"></textarea>
-            </div> -->
-        </div>
-        <div class="control">
-            <button class="button is-primary" id="submit-question" onclick="submitQuestion()">Submit</button>
-        </div>
+        </section>
 
         <div class="container">
+
+
             <div class="section">
-                <div id="quarum-app">
-                    
+                <label class="label is-medium">Sort By</label>
+
+                <div class="control has-icons-left">
+                    <div class="select">
+                        <select>
+                            <option>Alphabetically (A-Z)</option>
+                            <option>Alphabetically (Z-A)</option>
+                            <option>Most Upvotes</option>
+                            <option>Least Upvotes</option>
+                            <option>Most Answers</option>
+                            <option>Least Answers</option>
+                        </select>
+                    </div>
+                    <div class="icon is-left">
+                        <i class="fas fa-sort"></i>
+                    </div>
+                </div>
+                
+
+                <hr>
+
+                <div class="section p-1">
+                    <div id="quarum-app">    
+                        <progress class="progress is-small is-dark" max="100"></progress>
+
+                        <!-- <div id="testIndividualCard" class="my-4">
+                            <article class="message is-light">
+                                <div class="message-header pb-1">
+                                    <div class="control is-medium is-loading is-static is-fullwidth">
+                                        <input class="input is-medium is-loading is-static" type="text">
+                                    </div>
+                                </div>
+
+                                <div class="message-header has-text-grey pt-1 pb-2">
+                                    <p>July 12, 2021, 3:51 PM PST</p>
+                                </div>
+
+                                <div class="message-body">
+                                    <hr class="is-grey my-3">
+                                                    
+                                    <div class="field has-addons mt-4">
+                                        <div class="control is-expanded is-loading">
+                                            <input class="input is-rounded is-loading" type="text" disabled>
+                                        </div>
+                                    
+                                        <div class="control">
+                                            <button class="button brand-color-fill is-rounded is-loading">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div> -->
+
+    
+                    </div>
+                </div>
+
+            </div>
+            
+            
+            
+            <div id="editQuestionModal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head brand-color-fill">
+                    <p class="modal-card-title has-text-light"><b>Edit Question</b></p>
+                    <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
+                    </header>
+
+                    <section class="modal-card-body">
+                        <div class="card-content">
+                            <div class="content">
+                                <input class="input is-normal" id="editQuestionInput" type="text" placeholder="Edit question...">
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="modal-card-foot">
+                        <button id="save-button" class="button brand-color-fill is-rounded is-fullwidth"><b>Save Changes</b></button>
+                        <button class="button is-rounded is-fullwidth" onclick="closeEditModal()">Cancel</button>
+                    </footer>
                 </div>
             </div>
         </div>
 
-        <div id="editQuestionModal" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Edit Question</p>
-                    <button class="delete" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <input class="input is-normal" id="editQuestionInput" type="text">
-                </section>
-                <footer class="modal-card-foot">
-                    <button id="save-button" class="button is-success">Save changes</button>
-                    <button class="button" onclick="closeEditModal()">Cancel</button>
-                </footer>
+        <section class="section hero is-small is-light p-5" style="position: sticky; bottom: 0;">
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <input class="input is-rounded" type="text" placeholder="Ask an anonymous question!" id="new-question">
+                </div>
+                <div class="control">
+                    <a class="button brand-color-fill is-rounded" id="submit-question" onclick="submitQuestion()">
+                    Submit
+                    </a>
+                </div>
             </div>
-        </div>
+            <label class="label has-text-right">Quarum ID: <span class="quarum-id"></span></label>
+
+        </section>
         
+         <footer class="hero is-dark">
+            <div class="hero-body">
+                <p class="subtitle mb-0">
+                    <b>Quarum</b>
+                </p>
+                <p class="subtitle has-text-grey-light">Created with ❤️ in San Diego, Oslo, and New York.</p>
+            </div>
+        </footer>
+
     </body>
+
+    
 </html>

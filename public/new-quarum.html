@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home — Quarum</title>
+    <title>New Quarum — Quarum</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -84,18 +84,35 @@
             
     </nav>
 
-    <section class="hero is-medium is-light">
+    <section class="hero is-large is-light">
         <div class="hero-body">
-            <p class="title brand-color">
-            Quarum
-            </p>
-            <p class="subtitle">
-            A new way to ask questions and engage in lectures!
-            </p>
+            <div class="container">
+                <a href="/index.html"><p class="subtitle brand-color-text mb-3">
+                        < Return Home
+                </p></a>
 
-            <div class="buttons">
-                <button class="button brand-color-fill is-loading" onclick="newQuarum()">New Quarum</button>                
-                <button class="button is-outlined is-loading" onclick="joinQuarum()">Join Quarum</button>
+                <p class="title">
+                    Create a new Quarum
+                </p>
+
+                <div class="field">
+                    <label class="label is-medium">Quarum Name</label>
+                    <div class="control">
+                        <input class="input" id="quarumName" type="text" placeholder="Calculus Lecture">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <p class="control">
+                        <button class="button brand-color-fill is-loading" id="createSubmitButton" onclick="createQuarum()">
+                        Create Quarum
+                        </button>
+                    </p>
+                </div>
+
+                <div class="notification is-danger is-light mt-4 is-hidden" id="alertBanner">
+                    <b>Error:</b> Please fill in the Quarum Name field.
+                </div>
             </div>
         </div>
     </section>
@@ -108,36 +125,6 @@
             <p class="subtitle has-text-grey-light">Created with ❤️ in San Diego, Oslo, and New York.</p>
         </div>
     </footer>
-
-    <div id="joinQuarumModal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head brand-color-fill">
-            <p class="modal-card-title has-text-light"><b>Join Quarum</b></p>
-            <button class="delete" aria-label="close" onclick="toggleJoinQuarumModal()"></button>
-            </header>
-
-            <section class="modal-card-body">
-                <div class="card-content">
-                    <div class="content">
-                        <h4 class="subtitle has-text-weight-bold mb-0">Please enter the six-digit Quarum ID</h4>
-                        <p class="has-text-underlined">You may get the ID from the host of the Quarum.</p>
-
-                        <input class="input is-medium p-4" id="joinQuarumInput" type="text" placeholder="123456">
-
-                        <div class="notification is-danger is-light mt-4 is-hidden" id="quarumNotFoundAlert">
-                            <b>Error:</b> We couldn't find a Quarum session with the outlined ID. Please check with the host and verify there are no typos.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <footer class="modal-card-foot">
-            <button class="button brand-color-fill is-rounded is-fullwidth" onclick="doJoinQuarum()" id="joinQuarumButton"><b>Join Quarum</b></button>
-            <button class="button is-rounded is-fullwidth" onclick="toggleJoinQuarumModal()" id="cancelJoinButton">Cancel</button>
-            </footer>
-        </div>
-    </div>
 
     <div id="signInModal" class="modal">
         <div class="modal-background"></div>
@@ -198,5 +185,6 @@
   
   <script src="js/buttonActions.js"></script>
   <script src="js/signIn.js"></script>
+  <script src="js/createQuarum.js"></script>
 
 </html>
