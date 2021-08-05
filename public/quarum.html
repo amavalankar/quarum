@@ -31,13 +31,14 @@
 
     <body>
 
+        <!-- NAVBAR -->
         <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #382eec; padding: 0.5rem 0rem;">
             <div class="navbar-brand" style="padding-left: 1rem;">
                 <a class="navbar-item" href="/index.html">
-                    <h4 class="has-text-light"><b>Quarum</b></h4>
+                    <h4 class="has-text-light">
+                        <b>Quarum</b>
+                    </h4>
                 </a>
-
-                
             </div>
 
             <div class="navbar-brand navbar-end" style="padding-right: 1.5rem;">
@@ -55,7 +56,6 @@
                             </span>
                         </div>
                     </a>
-                    
 
                     <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
                         <div class="dropdown-content">
@@ -71,33 +71,33 @@
 
                     <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
                         <div class="dropdown-content">
-                        <a href="#" class="dropdown-item">
-                            Account Settings
-                        </a>
-                        <hr class="dropdown-divider">
-                        <a onclick="signOut()" class="dropdown-item">
-                            <b>Sign Out</b>
-                        </a>
+                            <a href="#" class="dropdown-item">
+                                Account Settings
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a onclick="signOut()" class="dropdown-item">
+                                <b>Sign Out</b>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            
         </nav>
 
+        <!-- QUARUM ID TITLE -->
         <section class="section hero is-small is-light">
             <h1 class="title">
                 Quarum ID: <span class="brand-color-text quarum-id"></span>
             </h1>
         </section>
 
+        <!-- QUESTIONS -->
         <div class="container">
-
-
             <div class="section">
-                <label class="label is-medium">Sort By</label>
 
+                <!-- SORT BY FUNCTIONALITY -->
+                <label class="label is-medium">Sort By</label>
                 <div class="control has-icons-left">
                     <div class="select">
                         <select>
@@ -114,9 +114,9 @@
                     </div>
                 </div>
                 
-
                 <hr>
 
+                <!-- QUESTION SECTION -->
                 <div class="section p-1">
                     <div id="quarum-app">    
                         <progress class="progress is-small is-dark" max="100"></progress>
@@ -150,21 +150,20 @@
                                 </div>
                             </article>
                         </div> -->
-
-    
                     </div>
                 </div>
 
             </div>
             
-            
-            
+            <!-- MODAL TO EDIT QUESTIONS -->
             <div id="editQuestionModal" class="modal">
                 <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head brand-color-fill">
-                    <p class="modal-card-title has-text-light"><b>Edit Question</b></p>
-                    <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
+                        <p class="modal-card-title has-text-light">
+                            <b>Edit Question</b>
+                        </p>
+                        <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
                     </header>
 
                     <section class="modal-card-body">
@@ -183,6 +182,7 @@
             </div>
         </div>
 
+        <!-- QUESTION BAR -->
         <section class="section hero is-small is-light p-5" style="position: sticky; bottom: 0;">
             <div class="field has-addons">
                 <div class="control is-expanded">
@@ -194,10 +194,13 @@
                     </a>
                 </div>
             </div>
-            <label class="label has-text-right">Quarum ID: <span class="quarum-id"></span></label>
-
+            <label class="label has-text-right">
+                Quarum ID: 
+                <span class="quarum-id"></span>
+            </label>
         </section>
         
+        <!-- QUARUM FOOTER -->
          <footer class="hero is-dark">
             <div class="hero-body">
                 <p class="subtitle mb-0">
@@ -206,8 +209,6 @@
                 <p class="subtitle has-text-grey-light">Created with ❤️ in San Diego, Oslo, and New York.</p>
             </div>
         </footer>
-
+        
     </body>
-
-    
 </html>
