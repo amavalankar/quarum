@@ -1,6 +1,7 @@
 // Initialize questionId as global variable for edit function for now. 
 // We should look for a better solution, ie. bind(), but I think it's deprecated.
 let questionId;
+let quarumID;
 
 // TO-DOs:
 //     IMPLEMENT SORTING ALGORITHM
@@ -25,7 +26,7 @@ addLoadEvent(function() {
 // Get and diplay the Quarum ID when page loads
 addLoadEvent(function() {
     // Given a search parameter ("?id=123456"), get the Quarum ID
-    let quarumID = getQuarumID();
+    quarumID = getQuarumID();
 
     // Display the Quarum ID in the page title
     document.title = `${quarumID} — Quarum`;
@@ -68,7 +69,7 @@ const verifyUserAuthentication = () => {
 const getQuestions = () => {
     // Create an observer on the entire database
     // NOTE: It may be more worthwhile to attach to the specific Quarum within the database than the entire DB itself.
-    const dbRef = firebase.database().ref();
+    const dbRef = firebase.database().ref(`quarums/${quarumID}`);
 
     // Read data and render questions. 
     dbRef.on('value', (snapshot) => {
@@ -116,13 +117,22 @@ const submitQuestion = () => {
     console.log(`New question value: ${newQuestion.value}`);
 
     // Push data
-    firebase.database().ref('questions').push({
+    firebase.database().ref(`quarums/${quarumID}/questions`).push({
         questionText: newQuestion.value,
         submissionTime: dateTime,
         questionProperties: {
             upvotes: 0
         }
     });
+
+    // // Push data
+    // firebase.database().ref('questions').push({
+    //     questionText: newQuestion.value,
+    //     submissionTime: dateTime,
+    //     questionProperties: {
+    //         upvotes: 0
+    //     }
+    // });
 
     newQuestion.value = "";
 };
@@ -138,7 +148,8 @@ let submitAnswer = (questionId) => {
     let dateTime = date+' '+time;
 
     // Push answer
-    let answerPushId = firebase.database().ref('answers').push({
+    // let answerPushId = firebase.database().ref('answers').push({
+    let answerPushId = firebase.database().ref(`quarums/${quarumID}/answers`).push({
         answerText: newAnswer.value,
         submissionTime: dateTime,
         answerProperties: {
@@ -148,7 +159,8 @@ let submitAnswer = (questionId) => {
 
     // Push answerKey
     let answerKey = answerPushId.getKey();
-    firebase.database().ref(`questions/${questionId}/answers`).update({
+    // firebase.database().ref(`questions/${questionId}/answers`).update({
+    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/answers`).update({
         [answerKey]: true
     });
 };
@@ -224,7 +236,8 @@ const editQuestion = (questionId) => {
     editQuestionModal.classList.toggle("is-active");
 
     // Display current question in edit question bar
-    firebase.database().ref(`/questions/${questionId}/questionText`).once('value').then((snapshot) => {
+    // firebase.database().ref(`/questions/${questionId}/questionText`).once('value').then((snapshot) => {
+    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionText`).once('value').then((snapshot) => {
         let oldQuestion = snapshot.val();
         console.log(oldQuestion);
         let inputField = document.querySelector("#editQuestionInput");
@@ -255,7 +268,8 @@ const editQuestion = (questionId) => {
 
     saveButton.onclick = () => {
         let newQuestionText = document.querySelector("#editQuestionInput").value;
-        firebase.database().ref(`questions/${questionId}`)
+        // firebase.database().ref(`questions/${questionId}`)
+        firebase.database().ref(`quarums/${quarumID}/questions/${questionId}`)
             .update({
                 questionText: newQuestionText
             });
@@ -272,19 +286,22 @@ const upvoteQuestion = (questionId, currentUpvotes) => {
     upvoteButton = document.querySelector(`#${questionId}-upvoteButton`);
     currentUID = firebase.auth().currentUser.uid;
 
-    firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).get().then((snapshot) => {
+    // firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).get().then((snapshot) => {
+    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).get().then((snapshot) => {
 
         if (snapshot.exists()) {
 
             //console.log(`User of UID: ${currentUID} is found in upvotes`);
-            firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).remove();
+            // firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).remove();
+            firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).remove();
             updateUpvotes(currentUpvotes - 1);
             // TODO: Remove selected starred CSS class from the upvoteButton
 
         } else {
 
             //console.log("No data available");
-            firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/`).child(currentUID).set("true");
+            // firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/`).child(currentUID).set("true");
+            firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties/upvoteUsers/`).child(currentUID).set("true");
             updateUpvotes(currentUpvotes + 1);
             // TODO: Add selected starred CSS class from the upvoteButton
 
@@ -292,7 +309,8 @@ const upvoteQuestion = (questionId, currentUpvotes) => {
     });
 
     const updateUpvotes = (inputUpvotes) => {
-        firebase.database().ref(`questions/${questionId}/questionProperties`)
+        // firebase.database().ref(`questions/${questionId}/questionProperties`)
+        firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties`)
                 .update({
                     upvotes: inputUpvotes
                 });
@@ -301,7 +319,8 @@ const upvoteQuestion = (questionId, currentUpvotes) => {
 
 // Function to delete questions
 const deleteQuestion = (questionId) => {
-    firebase.database().ref(`questions/${questionId}`).remove();
+    // firebase.database().ref(`questions/${questionId}`).remove();
+    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}`).remove();
     showOptions(questionId);
 };
 
