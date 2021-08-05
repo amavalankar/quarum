@@ -51,6 +51,20 @@
     background-color: #232236 !important;
 }
 
- .aria-hidden {
+.aria-hidden {
     display: none
 }
+
+.star {
+    text-decoration: none !important;
+}
+
+.one-line {
+    /* overflow: hidden !important; */
+    white-space: nowrap !important;
+}
+
+.modal-background {
+    background: linear-gradient(-10deg, #268060 0%, #181447 100%);
+    opacity: 0.9;
+}  
