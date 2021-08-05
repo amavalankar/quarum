@@ -2,6 +2,7 @@
 // We should look for a better solution, ie. bind(), but I think it's deprecated.
 let questionId;
 let quarumID;
+let userId;
 
 // TO-DOs:
 //     IMPLEMENT SORTING ALGORITHM
@@ -58,6 +59,7 @@ const verifyUserAuthentication = () => {
         if (user) {
             getQuestions();
             console.log(`User signed in as: ${user.displayName}`);
+            userId = user.uid;
         } else {
             // If the user is not signed in or signs out, redirect to index.html    
             window.location = 'index.html';
@@ -97,6 +99,30 @@ const renderQuestionAsHTML = (obj) => {
             answerTextArray.push(answerText);
         }
         cards += createCard(questionId, questions, answerTextArray);
+        let dbRef = firebase.database().ref();
+        dbRef.child(`users/${userId}/ownedQuestions/`).child(`${questionId}/${quarumID}`).get().then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log("YES: ", snapshot.val());
+                let editDeleteButtons = `
+                <div class="dropdown is-right" id="${questionId}-dropdown">
+                    <div class="dropdown-trigger">
+                        <a class="icon is-small" onclick="showOptions('${questionId}')" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </a>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a class="dropdown-item" onclick="editQuestion('${questionId}')">Edit</a>
+                            <a class="dropdown-item" onclick="deleteQuestion('${questionId}')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+                editDeleteButtonHtml = document.querySelector(`#${questionId}-edit-delete-button-html`);
+                editDeleteButtonHtml.innerHTML += editDeleteButtons;
+            }
+        });
     }
     // Render cards
     let questionCards = document.querySelector("#quarum-app");
@@ -117,11 +143,22 @@ const submitQuestion = () => {
     console.log(`New question value: ${newQuestion.value}`);
 
     // Push data
-    firebase.database().ref(`quarums/${quarumID}/questions`).push({
+    let questionPushId = firebase.database().ref(`quarums/${quarumID}/questions`).push({
         questionText: newQuestion.value,
         submissionTime: dateTime,
         questionProperties: {
-            upvotes: 0
+            upvotes: 1,
+            upvoteUsers: { 
+                [firebase.auth().currentUser.uid]: true
+            }
+        }
+    });
+
+    // Push user questionId
+    let questionKey = questionPushId.getKey();
+    firebase.database().ref(`users/${userId}/ownedQuestions/`).update({
+        [questionKey]: {
+            [quarumID]: true
         }
     });
 
@@ -176,7 +213,6 @@ const createCard = (questionId, questions, answerTextArray) => {
         <hr class="is-grey my-3">
         `;
     }
-
     return `
     <div class="my-4">
         <article class="message is-light">
@@ -187,20 +223,7 @@ const createCard = (questionId, questions, answerTextArray) => {
 
                         <div class="message-header has-text-grey pt-1 pb-2">
                             <p><time datetime="2016-1-1">${questions[questionId].submissionTime}</time></p>
-                            
-                            <div class="dropdown is-right" id="${questionId}-dropdown">
-                                <div class="dropdown-trigger">
-                                    <a class="icon is-small" onclick="showOptions('${questionId}')" aria-haspopup="true" aria-controls="dropdown-menu">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </a>
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                    <div class="dropdown-content">
-                                        <a class="dropdown-item" onclick="editQuestion('${questionId}')">Edit</a>
-                                        <a class="dropdown-item" onclick="deleteQuestion('${questionId}')">Delete</a>
-                                    </div>
-                                </div>
+                            <div id="${questionId}-edit-delete-button-html">
                             </div>
                         </div>
 
@@ -222,6 +245,8 @@ const createCard = (questionId, questions, answerTextArray) => {
     </div>
     `;
 };
+
+
 
 // Toggle edit options
 let showOptions = (id) => {
