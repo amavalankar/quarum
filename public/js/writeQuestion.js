@@ -1,22 +1,33 @@
-// Add answer to database
-// Add answerkey to database
-// Display answer
+// Initialize questionId as global variable for edit function for now. 
+// We should look for a better solution, ie. bind(), but I think it's deprecated.
+let questionId;
 
+// TO-DOs:
+//     IMPLEMENT SORTING ALGORITHM
+//     SET DATETIME TO SPECIFIC TIME ZONE
+//     FIX BROKEN EDIT/DELETE FUNCTIONALITY
 
-// Access and display all questions when page loads
+// Script functions:
+// addLoadEvent()
+//     verifyUserAuthentication():
+//     getQuarumID()
 
-// Since we import from multiple JS files, we cannot simply use the window.onload() event because there are multiple things that need to be ran when the window loads.
-// Thus, we create the addLoadEvent(function()) function that — when given a function — adds it to a queue of functions that loads when the page loads.
-// The function itself, which can be ignored, is at the bottom of this file. Be sure not to edit or remove it! :D
+// // Initialize questionId as global variable for edit function for now. 
+// // We should look for a better solution, ie. bind(), but I think it's deprecated.
+// let questionId;
+
+// User authentication when page loads
 addLoadEvent(function() {
     // Verify if the user is signed in. If not, redirect to index.html
     verifyUserAuthentication();
 });
 
+// Get and diplay the Quarum ID when page loads
 addLoadEvent(function() {
     // Given a search parameter ("?id=123456"), get the Quarum ID
-    quarumID = getQuarumID();
+    let quarumID = getQuarumID();
 
+    // Display the Quarum ID in the page title
     document.title = `${quarumID} — Quarum`;
 
     // For all items with the "quarum-id" class, display the Quarum ID
@@ -25,8 +36,8 @@ addLoadEvent(function() {
     })
 });
 
+// Function to get the quarum ID from the URL
 const getQuarumID = () => {
-
     // Get the current URL.
     const queryString = window.location.search;
     
@@ -38,51 +49,33 @@ const getQuarumID = () => {
     return queryID;
 }
 
+// Function for user authentication.
 const verifyUserAuthentication = () => {
-
     // Create an attached observer of the user's authentication state
     firebase.auth().onAuthStateChanged((user) => {
+        // If the user is signed in, render the questions
         if (user) {
-            // If the user is signed in, render the questions
             getQuestions();
             console.log(`User signed in as: ${user.displayName}`);
-            console.log(user);
         } else {
-            // If the user signs out, redirect to index.html    
+            // If the user is not signed in or signs out, redirect to index.html    
             window.location = 'index.html';
         }
     });
 }
 
-
-// Get questions
+// Function to render questions
 const getQuestions = () => {
-
-    // Database reference
-    const dbRef = firebase.database().ref();
-
     // Create an observer on the entire database
     // NOTE: It may be more worthwhile to attach to the specific Quarum within the database than the entire DB itself.
+    const dbRef = firebase.database().ref();
+
+    // Read data and render questions. 
     dbRef.on('value', (snapshot) => {
         const dbData = snapshot.val();
 
         // Render the retireved database data
         renderQuestionAsHTML(dbData);
-
-        // let questions = dbRef.questions;
-        // for (const questionId in questions) {
-        //     let answersData = questions[questionId].answers;
-            
-        //     let answerTextArray = [];
-        //     for (const answerId in answersData) {
-        //         // console.log(answerId, answersData);
-        //         let answerText = dbRef.answers[answerId].answerText;
-        //         // console.log(answerText);
-        //         answerTextArray.push(answerText);
-        //     }
-
-        //     renderQuestionAsHTML(questionId, questions, answerTextArray);
-        // }
     });
 };
 
@@ -94,26 +87,20 @@ const renderQuestionAsHTML = (obj) => {
     // NOTE: When we implement sorting functionality, we'll need to use a .forEach instead on the snapshot object
     // Additionally, we'll need to add the sorting to the data retrieval on lines 64 and 65.
     // Refer to the documentation here: https://github.com/amavalankar/FirebaseSortBy/blob/main/README.md
+    // Create cards
     for (const questionId in questions) {
         let answersData = questions[questionId].answers;
         let answerTextArray = [];
         for (const answerId in answersData) {
-            // console.log(answerId, answersData);
             let answerText = obj.answers[answerId].answerText;
-            // console.log(answerText);
             answerTextArray.push(answerText);
         }
         cards += createCard(questionId, questions, answerTextArray);
     }
+    // Render cards
     let questionCards = document.querySelector("#quarum-app");
     questionCards.innerHTML = cards;
 };
-
-// // Function to render questions and answers
-// const renderQuestionAsHTML = (questionId, questions, answerTextArray) => {
-//     let questionCards = document.querySelector("#quarum-app");
-//     questionCards.innerHTML += createCard(questionId, questions, answerTextArray);
-// };
 
 // Function to submit question
 const submitQuestion = () => {
@@ -143,7 +130,6 @@ const submitQuestion = () => {
 // Function to submit answer
 let submitAnswer = (questionId) => {
     let newAnswer = document.querySelector(`#${questionId}-new-answer`);
-    console.log(newAnswer.value);
 
     // Add timestamp
     let submissionTimestamp = new Date();
@@ -232,19 +218,42 @@ let showOptions = (id) => {
     dropdown.classList.toggle('is-active');
 };
 
+// Function to edit questions
 const editQuestion = (questionId) => {
     const editQuestionModal = document.querySelector("#editQuestionModal");
-    console.log(editQuestionModal);
     editQuestionModal.classList.toggle("is-active");
 
+    // Display current question in edit question bar
     firebase.database().ref(`/questions/${questionId}/questionText`).once('value').then((snapshot) => {
-        console.log(snapshot.val());
-        document.querySelector("#editQuestionInput").value = snapshot.val();
+        let oldQuestion = snapshot.val();
+        console.log(oldQuestion);
+        let inputField = document.querySelector("#editQuestionInput");
+        inputField.value = oldQuestion;
     });
-    // showOptions(questionId);
 
+    // // Get the text from the note in the database
+    // const notesRef = firebase.database().ref(`users/${googleUserId}/${noteId}`);
+    // notesRef.on('value', snapshot => {
+    //     const data = snapshot.val();
+        
+    //     document.querySelector("#editTitleInput").value = data.title;
+    //     document.querySelector("#editTextInput").value = data.note;
+    // });
+
+    // Event listener for saving question
     const saveButton = document.querySelector("#save-button");
-    saveButton.addEventListener("click", (event) => {
+    // saveButton.addEventListener("click", (event) => {
+    //     let newQuestionText = document.querySelector("#editQuestionInput").value;
+    //     console.log(newQuestionText);
+    //     firebase.database().ref(`questions/${questionId}`)
+    //         .update({
+    //             questionText: newQuestionText
+    //         });
+    //     document.querySelector("#editQuestionInput").value = '';
+    //     closeEditModal();
+    // });
+
+    saveButton.onclick = () => {
         let newQuestionText = document.querySelector("#editQuestionInput").value;
         firebase.database().ref(`questions/${questionId}`)
             .update({
@@ -252,11 +261,12 @@ const editQuestion = (questionId) => {
             });
         document.querySelector("#editQuestionInput").value = '';
         closeEditModal();
-    });
+    };
 
     showOptions(questionId);
 };
 
+// Upvote question function
 const upvoteQuestion = (questionId, currentUpvotes) => {
 
     upvoteButton = document.querySelector(`#${questionId}-upvoteButton`);
@@ -289,16 +299,20 @@ const upvoteQuestion = (questionId, currentUpvotes) => {
     }
 };
 
+// Function to delete questions
 const deleteQuestion = (questionId) => {
     firebase.database().ref(`questions/${questionId}`).remove();
     showOptions(questionId);
 };
 
+// Close modal
 const closeEditModal = () => {
     const editQuestionModal = document.querySelector("#editQuestionModal");
     editQuestionModal.classList.toggle("is-active");
 }
 
+// addLoadEvent: function that — when given a function — adds it to a queue of functions that loads when the page loads.
+// The function itself, which can be ignored, is at the bottom of this file. Be sure not to edit or remove it! :D
 function addLoadEvent(func) { 
   var oldonload = window.onload; 
   if (typeof window.onload != 'function') { 
