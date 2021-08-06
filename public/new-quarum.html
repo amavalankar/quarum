@@ -127,35 +127,34 @@
     </footer>
 
     <div id="signInModal" class="modal">
-        <div class="modal-background"></div>
+            <div class="modal-background"></div>
 
-        <div class="modal-card">
-            <header class="modal-card-head brand-color-fill">
-            <p class="modal-card-title has-text-light"><b>Sign In</b></p>
-            <button class="delete" aria-label="close" onclick="toggleSignInModal()"></button>
-            </header>
+            <div class="modal-card">
+                <header class="modal-card-head brand-color-fill">
+                <p class="modal-card-title has-text-light"><b>Sign In</b></p>
+                </header>
 
-            <section class="modal-card-body">
-                <div class="card-content">
-                    <div class="content">
-                        <h4 class="subtitle has-text-weight-bold mb-0">Please sign in to continue to Quarum</h4>
-                        
-                        <article class="message is-light mt-4">
-                            <div class="message-body">
-                                <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
-                            </div>
-                        </article>
+                <section class="modal-card-body">
+                    <div class="card-content">
+                        <div class="content">
+                            <h4 class="subtitle has-text-weight-bold mb-0">Please sign in to continue to the active Quarum session, or return to the home page.</h4>
+                            
+                            <article class="message is-light mt-4">
+                                <div class="message-body">
+                                    <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
+                                </div>
+                            </article>
 
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <footer class="modal-card-foot">
-            <button class="button brand-color-fill is-rounded is-fullwidth" onclick="signIn()"><b>Sign in with Google</b></button>
-            <button class="button is-rounded is-fullwidth" onclick="toggleSignInModal()">Cancel</button>
-            </footer>
+                <footer class="modal-card-foot">
+                <button class="button brand-color-fill is-rounded is-fullwidth" onclick="signIn()"><b>Sign in with Google</b></button>
+                <button class="button is-rounded is-fullwidth" onclick="returnHome()">Return Home</button>
+                </footer>
+            </div>
         </div>
-    </div>
 
     <!-- <div id="signInModal" class="modal">
         <div class="modal-background"></div>
