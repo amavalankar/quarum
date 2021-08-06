@@ -24,7 +24,28 @@ localStorage.setItem("sortMethod", "recent");
 addLoadEvent(function() {
     // Verify if the user is signed in. If not, redirect to index.html
     verifyUserAuthentication();
+
+    quarumID = getQuarumID();
+
+    verifyQuarum(quarumID);
+    
 });
+
+const verifyQuarum = (inputId)=> {
+    var ref = firebase.database().ref("quarums/");
+    ref.once("value").then(function(snapshot) {
+
+        var doesExist = snapshot.child(inputId).exists();
+
+        console.log(`The input ID of ${inputId} resolves as ${doesExist} in the database`);
+
+        if(!doesExist) {
+            //console.log(`Send gatekeep Quarum popup`);
+            joinModal = document.querySelector("#joinQuarumModal");
+            joinModal.classList.add("is-active");
+        }
+    });
+}
 
 // Get and diplay the Quarum ID when page loads
 addLoadEvent(function() {
@@ -187,6 +208,18 @@ const renderQuestionAsHTML = (obj, questionsArray) => {
     // Render cards
     let questionCards = document.querySelector("#quarum-app");
     questionCards.innerHTML = cardsHTML;
+
+    if(cardsHTML == ``) { 
+        noQuestionMessage = `
+        <h2 class="title has-text-centered mt-2 mb-0 has-text-grey">
+            <i class="fas fa-bullhorn"></i>
+        </h2>
+        <h2 class="title mt-2 mb-2 has-text-centered has-text-grey">No questions have been asked.</h2>
+        <h2 class="subtitle mb-3 mt-2 has-text-centered has-text-grey">Maybe you could be the first?</h2>
+        `;
+        questionCards.innerHTML = noQuestionMessage;
+        console.log('No questions') 
+    }
 };
 
 // Function to submit question

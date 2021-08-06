@@ -60,14 +60,14 @@ const createQuarum = () => {
             }
         });
 
-        // Get data from Firebase, and check if the desired ID exists in the quarums list.
-        var ref = firebase.database().ref("quarums/");
-        ref.once("value").then(function(snapshot) {
+        // // Get data from Firebase, and check if the desired ID exists in the quarums list.
+        // var ref = firebase.database().ref("quarums/");
+        // ref.once("value").then(function(snapshot) {
 
-            var doesExist = snapshot.child(quarumCode).exists();
+        //     var doesExist = snapshot.child(quarumCode).exists();
             
-            console.log(doesExist);
-        });
+        //     console.log(doesExist);
+        // });
 
         
 
@@ -79,8 +79,6 @@ const createQuarum = () => {
         alertBanner.classList.remove('is-hidden');
         inputField.classList.add("is-danger");
     }
-
-    submitButton.classList.remove("is-loading");
 }
 
 function addLoadEvent(func) { 

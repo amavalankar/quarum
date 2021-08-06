@@ -29,13 +29,14 @@
   </head>
 
   <body>
+    <!-- NAVBAR -->
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #382eec; padding: 0.5rem 0rem;">
         <div class="navbar-brand" style="padding-left: 1rem;">
             <a class="navbar-item" href="/index.html">
-                <h4 class="has-text-light"><b>Quarum</b></h4>
+                <h4 class="has-text-light">
+                    <b>Quarum</b>
+                </h4>
             </a>
-
-            
         </div>
 
         <div class="navbar-brand navbar-end" style="padding-right: 1.5rem;">
@@ -49,39 +50,36 @@
                 <a onclick="toggleUserIcon()" class="has-text-white">
                     <div class="dropdown-trigger">
                         <span class="icon">
-                                <i class="fas fa-user-circle" aria-hidden="true"></i>
+                            <i class="fas fa-user-circle" aria-hidden="true"></i>
                         </span>
                     </div>
                 </a>
-                
 
                 <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
                     <div class="dropdown-content">
-                    <a href="#" class="dropdown-item">
-                        Account Settings
-                    </a>
-                    <hr class="dropdown-divider">
-                    <a onclick="toggleSignInModal()" class="dropdown-item">
-                        <b>Sign In</b>
-                    </a>
+                        <a href="#" onclick="toggleUserIcon()" class="dropdown-item">
+                            Account Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a onclick="toggleUserIcon(); toggleSignInModal();" class="dropdown-item">
+                            <b>Sign In</b>
+                        </a>
                     </div>
                 </div>
 
                 <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
                     <div class="dropdown-content">
-                    <a href="#" class="dropdown-item">
-                        Account Settings
-                    </a>
-                    <hr class="dropdown-divider">
-                    <a onclick="signOut()" class="dropdown-item">
-                        <b>Sign Out</b>
-                    </a>
+                        <a href="#" onclick="toggleUserIcon()" class="dropdown-item">
+                            Account Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a onclick="toggleUserIcon(); toggleSignInModal();" class="dropdown-item">
+                            <b>Sign Out</b>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-
-            
     </nav>
 
     <section class="hero is-large is-light">

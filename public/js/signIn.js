@@ -221,7 +221,7 @@ const signIn = () => {
 
 const signOut = () => {
     firebase.auth().signOut().then(() => {
-        // location.reload();
+        location.reload();
     }).catch((error) => {
         console.log(`We encountered an error trying to sign out: ${error}`);
     });
