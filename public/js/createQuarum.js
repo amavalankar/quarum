@@ -8,7 +8,8 @@ const verifyUserAuthentication = () => {
             console.log(`User signed in as: ${user.displayName}`);
             //console.log(user);
         } else {
-            window.location = 'index.html';
+            redirectSignInModal = document.querySelector("#signInModal");
+            redirectSignInModal.classList.add("is-active")
         }
     });
 }
@@ -29,7 +30,7 @@ const createQuarum = () => {
 
     inputName = inputField.value;
     
-    if(inputName) {
+    if(inputName && firebase.auth().currentUser) {
         var quarumCode = generateRandomCode();
         //var quarumCode = 123456;
         console.log(quarumCode);
@@ -94,4 +95,8 @@ function addLoadEvent(func) {
       func(); 
     } 
   } 
+}
+
+const returnHome = () => {
+    window.location = 'index.html'
 }

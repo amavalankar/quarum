@@ -98,22 +98,27 @@
 
                 <!-- SORT BY FUNCTIONALITY -->
                 <label class="label is-medium">Sort By</label>
-                <div class="control has-icons-left">
-                    <div class="select">
-                        <select>
-                            <option>Alphabetically (A-Z)</option>
-                            <option>Alphabetically (Z-A)</option>
-                            <option>Most Upvotes</option>
-                            <option>Least Upvotes</option>
-                            <option>Most Answers</option>
-                            <option>Least Answers</option>
-                        </select>
+                    <div class="field is-grouped">
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select id="sort-button">
+                                    <option value="recent" valText="recent">Most Recent (Default)</option>
+                                    <option value="oldest" valText="oldest">Oldest</option>
+                                    <option value="most-upvotes" valText="most-upvotes">Most Upvotes</option>
+                                    <option value="least-upvotes" valText="least-upvotes">Least Upvotes</option>
+                                    <!-- <option value="most-answers" valText="most-answers">Most Answers</option>
+                                    <option value="least-answers" valText="least-answers">Least Answers</option> -->
+                                </select>
+                            </div>
+                            <div class="icon is-left">
+                                <i class="fas fa-sort"></i>
+                            </div>
+                        </div>
+
+                        <div class="control">
+                            <button class="button is-link is-light" onclick="sortCards()">Sort</button>
+                        </div>
                     </div>
-                    <div class="icon is-left">
-                        <i class="fas fa-sort"></i>
-                    </div>
-                </div>
-                
                 <hr>
 
                 <!-- QUESTION SECTION -->
@@ -199,6 +204,36 @@
                 <span class="quarum-id"></span>
             </label>
         </section>
+
+        <div id="signInModal" class="modal">
+            <div class="modal-background"></div>
+
+            <div class="modal-card">
+                <header class="modal-card-head brand-color-fill">
+                <p class="modal-card-title has-text-light"><b>Sign In</b></p>
+                </header>
+
+                <section class="modal-card-body">
+                    <div class="card-content">
+                        <div class="content">
+                            <h4 class="subtitle has-text-weight-bold mb-0">Please sign in to continue to the active Quarum session, or return to the home page.</h4>
+                            
+                            <article class="message is-light mt-4">
+                                <div class="message-body">
+                                    <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
+                                </div>
+                            </article>
+
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="modal-card-foot">
+                <button class="button brand-color-fill is-rounded is-fullwidth" onclick="signIn()"><b>Sign in with Google</b></button>
+                <button class="button is-rounded is-fullwidth" onclick="returnHome()">Return Home</button>
+                </footer>
+            </div>
+        </div>
         
         <!-- QUARUM FOOTER -->
          <footer class="hero is-dark">
