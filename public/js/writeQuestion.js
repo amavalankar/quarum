@@ -43,23 +43,25 @@ const verifyQuarum = (inputId)=> {
             //console.log(`Send gatekeep Quarum popup`);
             joinModal = document.querySelector("#joinQuarumModal");
             joinModal.classList.add("is-active");
+        } else {
+
+            // Display the Quarum ID in the page title
+            document.title = `${quarumID} — Quarum`;
+
+            // For all items with the "quarum-id" class, display the Quarum ID
+            document.querySelectorAll(".quarum-id").forEach((item) => {
+                item.innerHTML = quarumID;
+            })
+
+            var quarumTopic = snapshot.child(`${inputId}/quarumProperties/quarumName`).val()
+            console.log(quarumTopic);
+
+            document.querySelectorAll(".quarum-topic").forEach((item) => {
+                item.innerHTML = quarumTopic;
+            })
         }
     });
 }
-
-// Get and diplay the Quarum ID when page loads
-addLoadEvent(function() {
-    // Given a search parameter ("?id=123456"), get the Quarum ID
-    quarumID = getQuarumID();
-
-    // Display the Quarum ID in the page title
-    document.title = `${quarumID} — Quarum`;
-
-    // For all items with the "quarum-id" class, display the Quarum ID
-    document.querySelectorAll(".quarum-id").forEach((item) => {
-        item.innerHTML = quarumID;
-    })
-});
 
 // Function to get the quarum ID from the URL
 const getQuarumID = () => {
@@ -201,7 +203,9 @@ const renderQuestionAsHTML = (obj, questionsArray) => {
             answerTextArray.push(answerText);
         }
 
-        cardsHTML += createCard(questionKey, questionObject, answerTextArray);
+        let quarumOwner = obj.quarumProperties.quarumOwner;
+
+        cardsHTML += createCard(questionKey, questionObject, answerTextArray, quarumOwner);
         
     }
     ``
@@ -227,32 +231,34 @@ const submitQuestion = () => {
     let SubmitQuestionButton = document.querySelector("#submit-question");
     let newQuestion = document.querySelector("#new-question");
 
-    // Add timestamp
-    let submissionTimestamp = Date.now();
-    // date = submissionTimestamp.getFullYear()+'-'+(submissionTimestamp.getMonth()+1)+'-'+submissionTimestamp.getDate();
-    // time = submissionTimestamp.getHours() + ":" + submissionTimestamp.getMinutes() + ":" + submissionTimestamp.getSeconds();
-    // let dateTime = date+' '+time;
+    if(!newQuestion.value == "") {
+        // Add timestamp
+        let submissionTimestamp = Date.now();
+        // date = submissionTimestamp.getFullYear()+'-'+(submissionTimestamp.getMonth()+1)+'-'+submissionTimestamp.getDate();
+        // time = submissionTimestamp.getHours() + ":" + submissionTimestamp.getMinutes() + ":" + submissionTimestamp.getSeconds();
+        // let dateTime = date+' '+time;
 
-    // console.log(`New question value: ${newQuestion.value}`);
+        // console.log(`New question value: ${newQuestion.value}`);
 
-    // Push data
-    let questionPushId = firebase.database().ref(`quarums/${quarumID}/questions`).push({
-        questionText: newQuestion.value,
-        submissionTime: submissionTimestamp,
-        questionProperties: {
-            owner: [firebase.auth().currentUser.uid],
-            numberOfAnswers: 0,
-            upvotes: 0
-        }
-    });
+        // Push data
+        let questionPushId = firebase.database().ref(`quarums/${quarumID}/questions`).push({
+            questionText: newQuestion.value,
+            submissionTime: submissionTimestamp,
+            questionProperties: {
+                owner: [firebase.auth().currentUser.uid],
+                numberOfAnswers: 0,
+                upvotes: 0
+            }
+        });
 
-    // Push user questionId
-    let questionKey = questionPushId.getKey();
-    firebase.database().ref(`users/${userId}/ownedQuestions/`).update({
-        [questionKey]: {
-            [quarumID]: true
-        }
-    });
+        // Push user questionId
+        let questionKey = questionPushId.getKey();
+        firebase.database().ref(`users/${userId}/ownedQuestions/`).update({
+            [questionKey]: {
+                [quarumID]: true
+            }
+        });
+    }
 
     // // Push data
     // firebase.database().ref('questions').push({
@@ -270,39 +276,44 @@ const submitQuestion = () => {
 let submitAnswer = (questionId) => {
     let newAnswer = document.querySelector(`#${questionId}-new-answer`);
 
-    // Add timestamp
-    let submissionTimestamp = new Date();
-    date = submissionTimestamp.getFullYear()+'-'+(submissionTimestamp.getMonth()+1)+'-'+submissionTimestamp.getDate();
-    time = submissionTimestamp.getHours() + ":" + submissionTimestamp.getMinutes() + ":" + submissionTimestamp.getSeconds();
-    let dateTime = date+' '+time;
+    if(!newAnswer.value == "") {
+        
+        // Add timestamp
+        let submissionTimestamp = Date.now();
+        // date = submissionTimestamp.getFullYear()+'-'+(submissionTimestamp.getMonth()+1)+'-'+submissionTimestamp.getDate();
+        // time = submissionTimestamp.getHours() + ":" + submissionTimestamp.getMinutes() + ":" + submissionTimestamp.getSeconds();
+        // let dateTime = date+' '+time;
 
-    // Push answer
-    // let answerPushId = firebase.database().ref('answers').push({
-    let answerPushId = firebase.database().ref(`quarums/${quarumID}/answers`).push({
-        answerText: newAnswer.value,
-        submissionTime: dateTime,
-        answerProperties: {
-            upvotes: 0
-        }
-    });
+        // Push answer
+        // let answerPushId = firebase.database().ref('answers').push({
+        let answerPushId = firebase.database().ref(`quarums/${quarumID}/answers`).push({
+            answerText: newAnswer.value,
+            submissionTime: submissionTimestamp,
+            answerProperties: {
+                upvotes: 0
+            }
+        });
 
-    // Push answerKey
-    let answerKey = answerPushId.getKey();
-    // firebase.database().ref(`questions/${questionId}/answers`).update({
-    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/answers`).update({
-        [answerKey]: true
-    });
+        // Push answerKey
+        let answerKey = answerPushId.getKey();
+        // firebase.database().ref(`questions/${questionId}/answers`).update({
+        firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/answers`).update({
+            [answerKey]: true
+        });
+    }
 };
 
 
 // Function to create card
-const createCard = (questionId, questionObject, answerTextArray) => {
+const createCard = (questionId, questionObject, answerTextArray, quarumOwner) => {
 
     var isQuestionOwner = false;
+    var isAdmin = false
 
     userUID = firebase.auth().currentUser.uid;
 
     if(questionObject.questionProperties.owner == userUID) { isQuestionOwner = true; }
+    else if(quarumOwner == userUID) { isAdmin = true; }
 
     var hasUserUpvote = false;
     try {
@@ -350,6 +361,21 @@ const createCard = (questionId, questionObject, answerTextArray) => {
                 </div>
             </div>
         </div>`;
+    } else if(isAdmin) {
+        editDeleteButtons = `
+        <div class="dropdown is-right" id="${questionId}-dropdown">
+            <div class="dropdown-trigger">
+                <a class="icon is-small" onclick="showOptions('${questionId}')" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <i class="fas fa-ellipsis-h"></i>
+                </a>
+            </div>
+                    
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <a class="dropdown-item" onclick="deleteQuestion('${questionId}')">Delete</a>
+                </div>
+            </div>
+        </div>`;
     }
     
     let renderedDateTime = renderDate(questionObject.submissionTime);
@@ -358,7 +384,7 @@ const createCard = (questionId, questionObject, answerTextArray) => {
         <article class="message is-light">
             <div class="message-header pb-1">
                 <p class="is-size-5"><b>${questionObject.questionText}</b></p>
-                <a class="${upvoteColorClass} one-line" onclick="upvoteQuestion('${questionId}', ${questionObject.questionProperties.upvotes})" id="${questionId}-upvoteButton">${questionObject.questionProperties.upvotes} <i class="${upvoteIcon}"></i></a>
+                <a class="${upvoteColorClass} one-line ml-2" onclick="upvoteQuestion('${questionId}')" id="${questionId}-upvoteButton">${questionObject.questionProperties.upvotes} <i class="${upvoteIcon}"></i></a>
             </div>
 
             <div class="message-header has-text-grey pt-1 pb-2">
@@ -444,15 +470,22 @@ const editQuestion = (questionId) => {
 };
 
 // Upvote question function
-const upvoteQuestion = (questionId, currentUpvotes) => {
+const upvoteQuestion = (questionId) => {
+
+    //console.log(questionProperties);
+    //var currentUpvotes = questionProperties.upvotes;
 
     upvoteButton = document.querySelector(`#${questionId}-upvoteButton`);
     currentUID = firebase.auth().currentUser.uid;
 
     // firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).get().then((snapshot) => {
-    firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).get().then((snapshot) => {
+    upvoteRef = firebase.database().ref(`quarums/${quarumID}/questions/${questionId}/questionProperties/`);
+    upvoteRef.get().then((snapshot) => {
 
-        if (snapshot.exists()) {
+        var currentUpvotes = snapshot.val().upvotes;
+        // console.log(`Current votes: ${currentUpvotes}`)
+
+        if (snapshot.child(`upvoteUsers/${currentUID}`).exists()) {
 
             //console.log(`User of UID: ${currentUID} is found in upvotes`);
             // firebase.database().ref(`questions/${questionId}/questionProperties/upvoteUsers/${currentUID}`).remove();
@@ -482,9 +515,10 @@ const upvoteQuestion = (questionId, currentUpvotes) => {
 
 // Function to delete questions
 const deleteQuestion = (questionId) => {
-    // firebase.database().ref(`questions/${questionId}`).remove();
+    firebase.database().ref(`questions/${questionId}`).remove();
+
     firebase.database().ref(`quarums/${quarumID}/questions/${questionId}`).remove();
-    showOptions(questionId);
+    // showOptions(questionId);
 };
 
 // Close modal

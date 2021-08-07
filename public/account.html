@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home — Quarum</title>
+    <title>Account — Quarum</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -58,7 +58,7 @@
 
                 <div class="dropdown-menu is-hidden" id="dropdownMenuSignedOut" role="menu">
                     <div class="dropdown-content">
-                    <a href="/account.html" class="dropdown-item">
+                    <a href="/account.html" class="dropdown-item brand-color-fill">
                         Account Settings
                     </a>
                     <hr class="dropdown-divider">
@@ -70,7 +70,7 @@
 
                 <div class="dropdown-menu is-hidden" id="dropdownMenuSignedIn" role="menu">
                     <div class="dropdown-content">
-                    <a href="/account.html" class="dropdown-item">
+                    <a href="/account.html" class="dropdown-item brand-color-fill">
                         Account Settings
                     </a>
                     <hr class="dropdown-divider">
@@ -85,18 +85,19 @@
             
     </nav>
 
-    <section class="hero is-medium is-light">
+    <section class="hero is-large is-light">
         <div class="hero-body">
-            <p class="title brand-color">
-            Quarum
-            </p>
-            <p class="subtitle">
-            A new way to ask questions and engage in lectures!
-            </p>
+            <div class="container">
+                <a href="/index.html"><p class="subtitle brand-color-text mb-3">
+                        < Return Home
+                </p></a>
 
-            <div class="buttons">
-                <button class="button brand-color-fill is-loading" onclick="newQuarum()">New Quarum</button>                
-                <button class="button is-outlined is-loading" onclick="joinQuarum()">Join Quarum</button>
+                <p class="title">
+                    Account Settings
+                </p>
+                <p class="subtitle">
+                    This page is currently in development — check back in later!
+                </p>
             </div>
         </div>
     </section>
@@ -110,66 +111,35 @@
         </div>
     </footer>
 
-    <div id="joinQuarumModal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head brand-color-fill">
-            <p class="modal-card-title has-text-light"><b>Join Quarum</b></p>
-            <button class="delete" aria-label="close" onclick="toggleJoinQuarumModal()"></button>
-            </header>
+    <div id="signInModal" class="modal">
+            <div class="modal-background"></div>
 
-            <section class="modal-card-body">
-                <div class="card-content">
-                    <div class="content">
-                        <h4 class="subtitle has-text-weight-bold mb-0">Please enter the six-digit Quarum ID</h4>
-                        <p class="has-text-underlined">You may get the ID from the host of the Quarum.</p>
+            <div class="modal-card">
+                <header class="modal-card-head brand-color-fill">
+                <p class="modal-card-title has-text-light"><b>Sign In</b></p>
+                </header>
 
-                        <input class="input is-medium p-4" id="joinQuarumInput" type="text" placeholder="123456">
+                <section class="modal-card-body">
+                    <div class="card-content">
+                        <div class="content">
+                            <h4 class="subtitle has-text-weight-bold mb-0">Please sign in to continue to the active Quarum session, or return to the home page.</h4>
+                            
+                            <article class="message is-light mt-4">
+                                <div class="message-body">
+                                    <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
+                                </div>
+                            </article>
 
-                        <div class="notification is-danger is-light mt-4 is-hidden" id="quarumNotFoundAlert">
-                            <b>Error:</b> We couldn't find a Quarum session with the outlined ID. Please check with the host and verify there are no typos.
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <footer class="modal-card-foot">
-            <button class="button brand-color-fill is-rounded is-fullwidth" onclick="doJoinQuarum()" id="joinQuarumButton"><b>Join Quarum</b></button>
-            <button class="button is-rounded is-fullwidth" onclick="toggleJoinQuarumModal()" id="cancelJoinButton">Cancel</button>
-            </footer>
+                <footer class="modal-card-foot">
+                <button class="button brand-color-fill is-rounded is-fullwidth" onclick="signIn()"><b>Sign in with Google</b></button>
+                <button class="button is-rounded is-fullwidth" onclick="returnHome()">Return Home</button>
+                </footer>
+            </div>
         </div>
-    </div>
-
-    <div id="signInModal" class="modal">
-        <div class="modal-background"></div>
-
-        <div class="modal-card">
-            <header class="modal-card-head brand-color-fill">
-            <p class="modal-card-title has-text-light"><b>Sign In</b></p>
-            <button class="delete" aria-label="close" onclick="toggleSignInModal()"></button>
-            </header>
-
-            <section class="modal-card-body">
-                <div class="card-content">
-                    <div class="content">
-                        <h4 class="subtitle has-text-weight-bold mb-0">Please sign in to continue to Quarum</h4>
-                        
-                        <article class="message is-light mt-4">
-                            <div class="message-body">
-                                <b>Note: </b>Sign in with Google will sign you in — regardless of whether or not you've created a Quarum account!
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-            </section>
-
-            <footer class="modal-card-foot">
-            <button class="button brand-color-fill is-rounded is-fullwidth" onclick="signIn()"><b>Sign in with Google</b></button>
-            <button class="button is-rounded is-fullwidth" onclick="toggleSignInModal()">Cancel</button>
-            </footer>
-        </div>
-    </div>
 
     <!-- <div id="signInModal" class="modal">
         <div class="modal-background"></div>
@@ -197,7 +167,6 @@
     </div> -->
   </body>
   
-  <script src="js/buttonActions.js"></script>
   <script src="js/signIn.js"></script>
 
 </html>
